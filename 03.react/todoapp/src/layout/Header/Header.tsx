@@ -1,7 +1,10 @@
 import axios from "axios";
 import { useState, useEffect, MouseEvent } from "react";
+import { useTodoStore } from "@/store/useTodoStore"; 
 
-const Header = ({ setTodoItem }) => {
+
+const Header = () => {
+  const {setTodoItem } = useTodoStore();
   const [activeButton, setActiveButton] = useState("All");
 
   useEffect(() => {

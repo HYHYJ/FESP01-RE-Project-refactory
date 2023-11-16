@@ -1,20 +1,29 @@
 import { useState, useEffect } from "react";
 import { TodoInfo, TodoRegist } from "../_index";
 import axios from "axios";
+import { useTodoStore } from "./../../store/useTodoStore"; 
 
-const TodoList = ({ todoItem, setTodoItem }) => {
+
+const TodoList = () => {
+  const {todoItem, setTodoItem,setId ,id } = useTodoStore();
+
   const [regist, setRegist] = useState(false);
   const [info, setInfo] = useState(false);
+  // const [id, setId] = useState(0)
+  const [IsUpDown, setUpDown] = useState("오름차순")
 
   useEffect(() => {
     initializeTodoList();
   }, []);
+
+
 
   // TodoItem UI에 필요한 데이터 패칭
   const initializeTodoList = async () => {
     try {
       const response = await axios("http://localhost:33088/api/todolist");
       const { items } = response.data;
+      
       setTodoItem(items);
     } catch (err) {
       console.error(err);
@@ -41,14 +50,45 @@ const TodoList = ({ todoItem, setTodoItem }) => {
   };
 
   // 새로운 글 등록 페이지 토글
-  const toggleInfo = () => {
+  const toggleInfo = (e) => {
     setInfo(!info);
+    const target  = e.target
+    setId(target.id);
   };
+  const upDown =(e) =>{
+    const createdAt = todoItem.map((i)=> i.createdAt);
+    console.log(todoItem.id);
+    console.log( e.target.value);
+    const value = e.target.value
+    const up = createdAt.sort(function(a,b){
+      a - b
+    })
+    const down = createdAt.sort(function(a,b){
+      b - a
+    })
+
+    console.log(up);
+    console.log(down);
+    
+    if(value === '오름차순'){
+      setTodoItem(todoItem.map((i)=>i.createdAt == up ))
+    }else if(value === '내림차순'){
+      setTodoItem(todoItem.map((i)=>i.createdAt == down ))
+    }
+    // if(){
+    //   setUpDown()
+    // }
+  }
+  
 
   return (
     <div>
       <div className="contents-container">
         <div className="list-container">
+          <select onClick={upDown} className='sorting'>
+            <option >내림차순</option>
+            <option >오름차순</option>
+          </select>
           <button className="regist-button" onClick={toggleRegist}>
             할 일 추가하기
           </button>
@@ -58,7 +98,6 @@ const TodoList = ({ todoItem, setTodoItem }) => {
                 key={item._id}
                 id={item._id}
                 className="todo-item"
-                onClick={toggleInfo}
               >
                 <input
                   className="checkbox-item"
@@ -66,11 +105,15 @@ const TodoList = ({ todoItem, setTodoItem }) => {
                   checked={item.done}
                   onChange={(e) => updateCheckBox(e, item._id)}
                 />
-                <span
+               <span id={item._id}
+                  onClick={toggleInfo}
                   className={item.done ? "checked title-item" : "title-item"}
                 >
                   {item.title}
-                </span>
+               </span>
+               <span className='createdAt'>
+                {item.createdAt}
+               </span>
               </li>
             ))}
           </ul>

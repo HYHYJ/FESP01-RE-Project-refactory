@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import TodoDelete from "../../utils/TodoDelete";
+import { useTodoStore } from "@/store/useTodoStore"; 
+
 
 interface TodoInfoProps {
+
   id: number;
 }
 
-const TodoInfo = (props: TodoInfoProps) => {
-  const id = props.id;
+const TodoInfo = () => {
+  const {id } = useTodoStore();
+
   const [isUpdate, setIsUpdate] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -21,6 +25,7 @@ const TodoInfo = (props: TodoInfoProps) => {
       const response: TodoResponse = await axios.get(
         `http://localhost:33088/api/todolist/${id}`
       );
+      
       if (response.data.ok === 1) {
         item = response.data.item;
         setTitle(item.title);
