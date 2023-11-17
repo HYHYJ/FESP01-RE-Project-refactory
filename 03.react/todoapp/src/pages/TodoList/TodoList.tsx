@@ -10,7 +10,7 @@ const TodoList = () => {
   const [regist, setRegist] = useState(false);
   const [info, setInfo] = useState(false);
   // const [id, setId] = useState(0)
-  const [IsUpDown, setUpDown] = useState("오름차순")
+  const [IsUpDown, setUpDown] = useState("최신순")
 
   useEffect(() => {
     initializeTodoList();
@@ -55,29 +55,28 @@ const TodoList = () => {
     const target  = e.target
     setId(target.id);
   };
-  const upDown =(e) =>{
-    const createdAt = todoItem.map((i)=> i.createdAt);
-    console.log(todoItem.id);
-    console.log( e.target.value);
+  const handleUpDown =(e) =>{
+    // const createdAt = todoItem.map((i)=> i.createdAt);
+    // console.log(todoItem.id);
     const value = e.target.value
-    const up = createdAt.sort(function(a,b){
-      a - b
-    })
-    const down = createdAt.sort(function(a,b){
-      b - a
-    })
-
-    console.log(up);
-    console.log(down);
+    console.log(value);
     
-    if(value === '오름차순'){
-      setTodoItem(todoItem.map((i)=>i.createdAt == up ))
-    }else if(value === '내림차순'){
-      setTodoItem(todoItem.map((i)=>i.createdAt == down ))
+    const newList = ()=> todoItem.sort(function(a,b) {
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    });
+    const oldList = () =>todoItem.sort(function(a,b) {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    });
+
+ 
+    
+    if(value === '최신순'){
+      setUpDown('최신순')
+      return setTodoItem(newList())
+    }else if(value === '등록순'){
+      setUpDown('등록순')
+      return setTodoItem(oldList())
     }
-    // if(){
-    //   setUpDown()
-    // }
   }
   
 
@@ -85,9 +84,9 @@ const TodoList = () => {
     <div>
       <div className="contents-container">
         <div className="list-container">
-          <select onClick={upDown} className='sorting'>
-            <option >내림차순</option>
-            <option >오름차순</option>
+          <select  onClick={handleUpDown} className='sorting'>
+            <option >최신순</option>
+            <option >등록순</option>
           </select>
           <button className="regist-button" onClick={toggleRegist}>
             할 일 추가하기
