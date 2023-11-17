@@ -11,11 +11,15 @@ header {
   border-bottom: 1px solid var(--color-border);
 }
 .searchResult{
-  position: absolute;
-  bottom: 0;
-  left: 25%;
-  width: 160px;
-  height: 60px;
+  position:absolute;
+  bottom: -50px;
+  padding: 10px;
+  left: 23%;
+  
+  width: 200px;
+
+  background-color: antiquewhite;
+
 }
 .listSearchForm {
   margin: 8px;
